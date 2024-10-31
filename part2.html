@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Traffic Accident Visualizations in Dubai</title>
+  <script src="https://cdn.jsdelivr.net/npm/vega@5.30.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.20.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.26.0"></script>
+</head>
+<body>
+    
+<h2>Task 1</h2>
+<div id="task1"></div>
+<script>
+  const spec1 = {
+    "width": 800,
+    "height": 450,
+    "data": {
+      "url": "https://raw.githubusercontent.com/sheriefAbdallah/CS318/refs/heads/main/Traffic_Incidents.csv",
+      "format": {"type": "csv",
+       "parse": {"acci_time": "date:'%d/%m/%Y %H:%M:%S'"}}
+    },
+    "transform": [
+      {"calculate": "timeFormat(datum.acci_time, '%A')", 
+      "as": "day_of_week"}
+    ],
+    "mark": {"type": "bar", 
+    "tooltip": true,
+    "size": 40},
+
+    "encoding": {
+      "x": {
+        "field": "day_of_week", 
+        "type": "ordinal", 
+        "title": "Day of the Week", 
+        "sort": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+      },
+      "y": {
+        "aggregate": "count",
+        "field": "acci_id",
+        "title": "Number of Accidents"
+      },
+      "color": {
+        "field": "day_of_week",
+        "type": "nominal",
+        "scale": {
+          "range": ["#ff7f0e",
+           "#2ca02c", 
+           "#d62728", 
+           "#1f77b4", 
+           "#9467bd", 
+           "#8c564b",
+            "#e377c2"] 
+        },
+        "legend": {
+          "orient": "right",
+          "titleFontSize": 14,
+          "labelFontSize": 12,
+          "offset": 20
+        },
+        "sort": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+      },
+      "tooltip": [
+        {"field": "day_of_week", 
+        "type": "nominal", 
+        "title": "Day"},  
+        {
+          "aggregate": "count",
+          "field": "acci_id",
+          "type": "quantitative",
+          "title": "Number of Accidents"
+        }
+      ]
+    },
+    "config": {
+      "axis": {"labelFontSize": 14,
+      
+      "titleFontSize": 16, "grid": true}
+    },
+    "title": {
+      "text": "Weekly Traffic Accident Distribution in Dubai",
+      "fontSize": 18,
+      "anchor": "start"
+    }
+  };
+  vegaEmbed("#task1", spec1, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+</script>
+
+
+<h2>Task 2</h2>
+<div id="task2"></div>
+<script>
+  const spec2 = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 800,
+    "height": 450,
+    "data": {
+      "url": "https://raw.githubusercontent.com/sheriefAbdallah/CS318/refs/heads/main/Traffic_Incidents.csv",
+      "format": {"type": "csv",
+       "parse": {"acci_time": "date:'%d/%m/%Y %H:%M:%S'"}}
+    },
+    "transform": [
+      {"calculate": "hours(datum.acci_time)", 
+      "as": "hour_of_day"},
+      {"calculate": "timeFormat(datum.acci_time, '%A')", 
+      "as": "day_of_week"}
+    ],
+    
+    "mark": {
+      "type": "line",
+      "interpolate": "monotone",
+      "strokeWidth": 2,
+      "opacity": 0.8,
+      "point": {"filled": true, 
+      "fill": "grey",
+       "size": 23}
+    },
+    "encoding": {
+      "x": {
+        "field": "hour_of_day",
+        "type": "quantitative",
+        "title": "Hour of the Day",
+        "axis": {"tickMinStep": 1, 
+        "grid": true}
+      },
+      "y": {
+        "aggregate": "count",
+        "field": "acci_id",
+        "title": "Number of Accidents"
+      },
+      "color": {
+        "field": "day_of_week",
+        "type": "nominal",
+        "scale": {
+          "range": ["#ff7f0e", 
+          "#2ca02c",
+           "#d62728", 
+           "#1f77b4",
+            "#9467bd", 
+            "#8c564b", "#e377c2"]  
+        },
+        "legend": {
+          "orient": "right",
+          "titleFontSize": 14,
+          "labelFontSize": 12,
+          "offset": 20
+        },
+        "sort": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+      },
+      "tooltip": [
+        {"field": "hour_of_day", 
+        "type": "quantitative", 
+        "title": "Hour"},
+        {"field": "day_of_week",
+         "type": "nominal",
+          "title": "Day"},
+        {
+          "aggregate": "count",
+          "field": "acci_id",
+          "type": "quantitative",
+          "title": "Number of Accidents"
+        }
+      ]
+    },
+    "config": {
+      "axis": {"labelFontSize": 12, 
+      "titleFontSize": 14, 
+      "gridOpacity": 0.6}
+    },
+    "title": {
+      "text": "Hourly Traffic Accident Trends in Dubai",
+      "fontSize": 18,
+      "anchor": "start"
+    }
+  };
+  vegaEmbed("#task2", spec2, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+</script>
+
+
+<h2> Task 3 </h2>
+<div id="task3"></div>
+<script>
+  const spec3 = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 800,
+    "height": 500,
+    "title": {
+      "text": "Geospatial Analysis of Traffic Accident Density Across Dubai",
+      "fontSize": 18,
+      "anchor": "start"
+    },
+    "config": {"legend": {"titleFontSize": 14, 
+    "labelFontSize": 12}},
+    "layer": [
+      {
+        "data": {
+          "url": "https://raw.githubusercontent.com/glynnbird/region-city-district-country-geojson/master/geojson/United%20Arab%20Emirates.geojson",
+          "format": {"type": "geojson"}
+        },
+        "mark": "geoshape",
+        "encoding": {"color": {"value": "#e0e0e0"}, 
+        "stroke": {"value": "black"}}
+      },
+      {
+        "data": {
+          "url": "https://raw.githubusercontent.com/sheriefAbdallah/CS318/refs/heads/main/Traffic_Incidents.csv",
+          "format": {"type": "csv"}
+        },
+        "transform": [
+          {
+            "filter": "datum.acci_y > 23 && datum.acci_y < 56 && datum.acci_x > 24 && datum.acci_x < 26"
+          }
+        ],
+        "mark": {"type": "circle", 
+        "opacity": 0.2},
+        "encoding": {
+          "longitude": {"field": "acci_y", 
+          "type": "quantitative"},
+          "latitude": {"field": "acci_x", 
+          "type": "quantitative"},
+
+          "size": {
+            "aggregate": "count",
+            "field": "acci_id",
+            "type": "quantitative",
+            "scale": {"range": [20, 150]}
+          },
+          "color": {
+            "aggregate": "count",
+            "field": "acci_id",
+            "type": "quantitative",
+            "scale": {"scheme": "reds"},
+            "legend": {"title": "Accident Density"}
+          },
+          "tooltip": [
+            {"field": "acci_x", 
+            "type": "quantitative", 
+            "title": "Latitude"},
+            {"field": "acci_y",
+             "type": "quantitative", 
+             "title": "Longitude"},
+            {
+              
+              "aggregate": "count",
+              "field": "acci_id",
+              "type": "quantitative",
+              "title": "Accident Count"
+            }
+          ]
+        }
+      }
+    ]
+  };
+  vegaEmbed("#task3", spec3, {mode: "vega-lite"}).then(console.log).catch(console.warn);
+</script>
+
+</body>
+</html>
